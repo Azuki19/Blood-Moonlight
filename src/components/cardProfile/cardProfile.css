@@ -1,0 +1,54 @@
+.profile-card-group {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 320px;
+	gap: 0;
+}
+
+.profile-card {
+	display: flex;
+	align-items: center;
+	background-color: #4e0000;
+	border-radius: 12px;
+	padding: 1rem;
+	color: white;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.profile-image {
+	flex-shrink: 0;
+	margin-right: 1rem;
+	display: flex;
+	align-items: center;
+}
+
+.profile-image img {
+	width: 70px;
+	height: 70px;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.profile-info h2 {
+	margin: 0;
+	font-size: 1.3rem;
+}
+
+.profile-info p {
+	margin: 0;
+	font-size: 0.9rem;
+	opacity: 0.9;
+}
+
+.role-card {
+	background-color: white;
+	border-radius: 0px 0px 8px 8px;
+	width: 85%;
+	text-align: center;
+	font-weight: bold;
+	color: black;
+	font-size: 0.9rem;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}

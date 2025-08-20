@@ -11,3 +11,21 @@
 		grid-template-columns: repeat(4, 1fr);
 	}
 }
+
+.pull-btn {
+	background-color: #a6000c;
+	color: white;
+	border: none;
+	border-radius: 25px;
+	padding: 0.7rem 1.5rem;
+	font-size: 1rem;
+	font-weight: bold;
+	cursor: pointer;
+	margin: 1.5rem auto;
+	display: block;
+	transition: background-color 0.2s ease;
+}
+
+.pull-btn:hover {
+	background-color: #7a0009;
+}

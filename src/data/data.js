@@ -48,3 +48,22 @@ export const mapsData = [
 		name: 'Castillo del consejo',
 	},
 ];
+
+export const missions = [
+	{
+		text: 'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna',
+		points: 5,
+	},
+	{
+		text: 'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna',
+		points: 8,
+	},
+	{
+		text: 'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna',
+		points: 10,
+	},
+	{
+		text: 'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna',
+		points: 12,
+	},
+];

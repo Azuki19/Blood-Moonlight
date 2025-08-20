@@ -11,3 +11,15 @@
 		grid-template-columns: repeat(4, 1fr);
 	}
 }
+
+.maps-btn {
+	background-color: #fff;
+	color: #710014;
+	font-size: 16px;
+	padding: 10px 30px;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	margin-bottom: 10px;
+	transition: transform 0.2s;
+}

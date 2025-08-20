@@ -16,6 +16,7 @@ const MapsPage = () => {
 					<Card imageSrc={map.image} text={map.name} />
 				))}
 			</div>
+			<button className='maps-btn'>Seleccionar</button>
 			<Menu />
 		</div>
 	);

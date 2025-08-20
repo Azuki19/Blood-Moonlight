@@ -13,6 +13,7 @@ const PullPage = () => {
 					<Card imageSrc={player.image} text={player.name} />
 				))}
 			</div>
+			<button className='pull-btn'>Estacar</button>
 			<Menu />
 		</div>
 	);
