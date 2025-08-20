@@ -1,0 +1,13 @@
+.cards-grid {
+	display: grid;
+	gap: 15px;
+	padding: 15px;
+
+	grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 768px) {
+	.cards-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}

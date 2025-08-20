@@ -1,0 +1,75 @@
+.page {
+	min-height: 100vh;
+	padding-top: 20px;
+	padding-bottom: 100px;
+	box-sizing: border-box;
+	background-color: #161616;
+	color: #fff;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: Arial, sans-serif;
+}
+
+.roles-title {
+	color: #a5000c;
+	font-size: 32px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.roles-qr {
+	display: flex;
+	justify-content: center;
+	margin-bottom: 15px;
+	width: 100%;
+	padding: 0 15px;
+	box-sizing: border-box;
+}
+
+.qr-image {
+	width: 100%;
+	max-width: 200px;
+	object-fit: contain;
+}
+
+.roles-text {
+	max-width: 800px;
+	text-align: left;
+	font-size: 16px;
+	margin-bottom: 20px;
+	padding: 0 15px;
+	line-height: 1.6;
+}
+
+.roles-players-count {
+	margin-bottom: 10px;
+	font-weight: bold;
+	text-align: left;
+	width: 100%;
+	max-width: 500px;
+	padding: 0 15px;
+}
+
+.roles-players {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+.start-button {
+	background-color: #fff;
+	color: #710014;
+	font-size: 16px;
+	padding: 10px 30px;
+	border: none;
+	border-radius: 10px;
+	cursor: pointer;
+	transition: transform 0.2s;
+}
+
+.start-button:hover {
+	transform: scale(1.05);
+}
