@@ -5,6 +5,9 @@ import CardPage from '../pages/cardPage/cardPage';
 import MapsPage from '../pages/maps/maps';
 import ProfilePage from '../pages/profile/profile';
 import PullPage from '../pages/pull/pull';
+import InfectedPage from '../pages/infectedPage/infectedPage';
+import DetailCard from '../pages/detailCard/detailCard';
+import JoinPage from '../pages/join/join';
 
 const AppRoutes = () => {
 	return (
@@ -17,6 +20,9 @@ const AppRoutes = () => {
 					<Route path='/maps' element={<MapsPage />} />
 					<Route path='/profile' element={<ProfilePage />} />
 					<Route path='/pull' element={<PullPage />} />
+					<Route path='/infected' element={<InfectedPage />} />
+					<Route path='/detailCard/:idCard' element={<DetailCard />} />
+					<Route path='/join/:roomId' element={<JoinPage />} />
 				</Routes>
 			</Router>
 		</>

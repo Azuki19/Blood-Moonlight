@@ -1,0 +1,59 @@
+.card-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 2rem 0;
+	gap: 1rem;
+	justify-content: center;
+}
+
+.card-number-input {
+	background-color: #4e0000;
+	color: #fff;
+	font-size: 2rem;
+	font-weight: bold;
+	padding: 2rem 3rem;
+	border-radius: 16px;
+	text-align: center;
+	border: none;
+	outline: none;
+	width: 220px;
+}
+
+.card-number-input::placeholder {
+	color: #fff;
+	opacity: 0.7;
+}
+
+.card-button {
+	background-color: #fff;
+	color: #4e0000;
+	border: none;
+	border-radius: 12px;
+	padding: 1rem 2rem;
+	font-size: 1rem;
+	font-weight: bold;
+	cursor: pointer;
+	text-align: center;
+	width: 150px;
+	transition: background 0.2s ease, color 0.2s ease;
+}
+
+.card-button:hover {
+	background-color: #4e0000;
+	color: #fff;
+}
+
+.card-image {
+	width: 220px;
+	height: 220px;
+	object-fit: cover;
+	border-radius: 12px;
+}
+
+.card-instruction {
+	text-align: center;
+	font-size: 1rem;
+	color: #fff;
+	max-width: 300px;
+}

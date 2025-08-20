@@ -67,3 +67,38 @@ export const missions = [
 		points: 12,
 	},
 ];
+
+export const cardData = [
+	{
+		id: 128,
+		title: 'Colmillos de sangre',
+		description:
+			'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna, rutrum senectus malesuada habitant nibh. Sapien fusce integer ante dapibus ullamcorper torquent risus.',
+		image: '/images/cardVampire.png',
+		points: '+7 pts',
+	},
+	{
+		id: 129,
+		title: 'Colmillos de sangre',
+		description:
+			'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna, rutrum senectus malesuada habitant nibh. Sapien fusce integer ante dapibus ullamcorper torquent risus.',
+		image: '/images/cardVampire.png',
+		points: '+12 pts',
+	},
+	{
+		id: 130,
+		title: 'Colmillos de sangre',
+		description:
+			'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna, rutrum senectus malesuada habitant nibh. Sapien fusce integer ante dapibus ullamcorper torquent risus.',
+		image: '/images/cardVampire.png',
+		points: '+18 pts',
+	},
+	{
+		id: 131,
+		title: 'Colmillos de sangre',
+		description:
+			'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna, rutrum senectus malesuada habitant nibh. Sapien fusce integer ante dapibus ullamcorper torquent risus.',
+		image: '/images/cardVampire.png',
+		points: '+5 pts',
+	},
+];

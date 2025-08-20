@@ -1,0 +1,52 @@
+.infected-grid {
+	display: grid;
+	gap: 15px;
+	padding: 15px;
+	grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 768px) {
+	.infected-grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+}
+
+.infected-buttons {
+	display: flex;
+	justify-content: space-between;
+	padding: 0 15px;
+	margin-top: 1.5rem;
+	gap: 10px;
+}
+
+.back-btn {
+	background: none;
+	border: none;
+	color: white;
+	font-size: 1rem;
+	font-weight: bold;
+	cursor: pointer;
+	padding: 0.7rem 1.5rem;
+	border-radius: 25px;
+	transition: color 0.2s ease;
+}
+
+.back-btn:hover {
+	color: #7a0009;
+}
+
+.pull-btn {
+	background-color: #a6000c;
+	color: white;
+	border: none;
+	border-radius: 25px;
+	padding: 0.7rem 1.5rem;
+	font-size: 1rem;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.pull-btn:hover {
+	background-color: #7a0009;
+}
