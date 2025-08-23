@@ -21,7 +21,7 @@ const AppRoutes = () => {
 					<Route path='/maps' element={<MapsPage />} />
 					<Route path='/profile' element={<ProfilePage />} />
 					<Route path='/pull' element={<PullPage />} />
-					<Route path='/infected' element={<InfectedPage />} />
+					<Route path='/infected/:idCard' element={<InfectedPage />} />
 					<Route path='/detailCard/:idCard' element={<DetailCard />} />
 					<Route path='/join/:roomId' element={<JoinPage />} />
 					<Route path='/roles-wait' element={<RolesWaitPage />} />

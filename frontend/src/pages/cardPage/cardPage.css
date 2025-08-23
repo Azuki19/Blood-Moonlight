@@ -1,28 +1,58 @@
+.card-container-wrapper {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 2rem 0;
+}
+
+.overlay-block {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+	color: #ffcc00;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 1.8rem;
+	font-weight: bold;
+	text-align: center;
+	z-index: 10;
+	padding: 1rem;
+	border-radius: 12px;
+	backdrop-filter: blur(2px);
+}
+
 .card-container {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	margin: 2rem 0;
 	gap: 1rem;
 	justify-content: center;
+	z-index: 1;
 }
 
 .card-number-input {
 	background-color: #4e0000;
 	color: #fff;
-	font-size: 2rem;
+	font-size: 1.4rem;
 	font-weight: bold;
-	padding: 2rem 3rem;
+	padding: 0.5rem 3rem;
 	border-radius: 16px;
 	text-align: center;
 	border: none;
 	outline: none;
-	width: 220px;
+	width: 300px;
+	height: 40px;
 }
 
 .card-number-input::placeholder {
 	color: #fff;
 	opacity: 0.7;
+	font-size: 1rem;
 }
 
 .card-button {
@@ -30,12 +60,11 @@
 	color: #4e0000;
 	border: none;
 	border-radius: 12px;
-	padding: 1rem 2rem;
+	padding: 0.6rem 2rem;
 	font-size: 1rem;
 	font-weight: bold;
 	cursor: pointer;
-	text-align: center;
-	width: 150px;
+	width: 180px;
 	transition: background 0.2s ease, color 0.2s ease;
 }
 
@@ -45,15 +74,44 @@
 }
 
 .card-image {
-	width: 220px;
-	height: 220px;
+	width: 100px;
+	height: 100px;
 	object-fit: cover;
 	border-radius: 12px;
 }
 
 .card-instruction {
 	text-align: center;
-	font-size: 1rem;
+	font-size: 0.9rem;
 	color: #fff;
 	max-width: 300px;
+}
+
+@media (max-width: 500px) {
+	.card-number-input {
+		width: 180px;
+		height: 36px;
+		font-size: 1.1rem;
+		padding: 0.4rem 2rem;
+	}
+
+	.card-image {
+		width: 80px;
+		height: 80px;
+	}
+
+	.card-button {
+		width: 140px;
+		padding: 0.5rem 1.2rem;
+		font-size: 0.9rem;
+	}
+
+	.card-instruction {
+		max-width: 200px;
+		font-size: 0.8rem;
+	}
+
+	.overlay-block {
+		font-size: 1.4rem;
+	}
 }

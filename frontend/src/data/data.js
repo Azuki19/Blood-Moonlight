@@ -1,21 +1,3 @@
-export const players = [
-	{
-		id: 1,
-		name: 'Ana Lucía',
-		image: '/images/userImage.png',
-	},
-	{
-		id: 2,
-		name: 'Ana Sofia',
-		image: '/images/userImage.png',
-	},
-	{
-		id: 3,
-		name: 'Cris',
-		image: '/images/userImage.png',
-	},
-];
-
 export const mapsData = [
 	{
 		id: 1,
@@ -100,5 +82,29 @@ export const cardData = [
 			'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna, rutrum senectus malesuada habitant nibh. Sapien fusce integer ante dapibus ullamcorper torquent risus.',
 		image: '/images/cardVampire.png',
 		points: '+5 pts',
+	},
+	{
+		id: 132,
+		title: 'Colmillos de sangre',
+		description:
+			'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna, rutrum senectus malesuada habitant nibh. Sapien fusce integer ante dapibus ullamcorper torquent risus.',
+		image: '/images/cardVampire.png',
+		points: '-50 pts',
+	},
+	{
+		id: 133,
+		title: 'Colmillos de sangre',
+		description:
+			'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna, rutrum senectus malesuada habitant nibh. Sapien fusce integer ante dapibus ullamcorper torquent risus.',
+		image: '/images/cardVampire.png',
+		points: '-25 pts',
+	},
+	{
+		id: 134,
+		title: 'Colmillos de sangre',
+		description:
+			'Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna, rutrum senectus malesuada habitant nibh. Sapien fusce integer ante dapibus ullamcorper torquent risus.',
+		image: '/images/cardVampire.png',
+		points: '-30 pts',
 	},
 ];

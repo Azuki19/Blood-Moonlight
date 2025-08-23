@@ -3,10 +3,13 @@ import { QRCodeCanvas } from 'qrcode.react';
 import './roles.css';
 import PlayerCard from '../../components/playerCard/playerCard';
 import socket from '../../socket/socket';
+import { useNavigate } from 'react-router-dom';
 
 function RolesPage() {
 	const [roomId, setRoomId] = useState(null);
 	const [players, setPlayers] = useState([]);
+
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		socket.emit('createRoom', ({ roomId, player }) => {
@@ -23,16 +26,18 @@ function RolesPage() {
 			setPlayers(updatedPlayers);
 		});
 
-		socket.on('gameStarted', () => {
+		socket.on('gameStarted', ({ players, currentTurn }) => {
 			localStorage.setItem('inGame', 'true');
-			window.location.href = '/profile';
+			localStorage.setItem('players', JSON.stringify(players));
+			localStorage.setItem('currentTurn', currentTurn);
+			navigate('/cards', { replace: true });
 		});
 
 		return () => {
 			socket.off('roomUpdate');
 			socket.off('gameStarted');
 		};
-	}, []);
+	}, [navigate]);
 
 	const handleStart = () => {
 		socket.emit('startGame', roomId);
