@@ -6,10 +6,9 @@ import socket from '../../socket/socket';
 import { useNavigate } from 'react-router-dom';
 
 function RolesPage() {
+	const navigate = useNavigate();
 	const [roomId, setRoomId] = useState(null);
 	const [players, setPlayers] = useState([]);
-
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		socket.emit('createRoom', ({ roomId, player }) => {
@@ -51,7 +50,7 @@ function RolesPage() {
 				{roomId && (
 					<>
 						<QRCodeCanvas
-							value={`http://localhost:3000/join/${roomId}}`}
+							value={`http://localhost:3000/join/${roomId}`}
 							size={200}
 							bgColor='#ffffff'
 							fgColor='#000000'

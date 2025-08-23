@@ -2,10 +2,10 @@ import SectionHeader from '../../components/sectionHeader/sectionHeader';
 import Card from '../../components/card/card';
 import Menu from '../../components/menu/menu';
 import { mapsData } from '../../data/data';
+import { useState, useEffect } from 'react';
 import './maps.css';
-import { useEffect, useState } from 'react';
-import socket from '../../socket/socket';
 import toast, { Toaster } from 'react-hot-toast';
+import socket from '../../socket/socket';
 
 const MapsPage = () => {
 	const [selectedCard, setSelectedCard] = useState(null);
@@ -14,7 +14,7 @@ const MapsPage = () => {
 	const playerId = localStorage.getItem('playerId');
 	const roomId = localStorage.getItem('roomId');
 
-	const handlerSelected = () => {
+	const handleSelect = () => {
 		if (selectedCard !== null) {
 			const map = mapsData[selectedCard];
 			socket.emit('mapSelected', { roomId, playerId, map });
@@ -24,12 +24,13 @@ const MapsPage = () => {
 	useEffect(() => {
 		socket.on('mapConfirmed', () => {
 			setConfirmed(true);
-			toast.success('Mapa seleccionado, ve al perfil para terminar tu turno', {
+			toast.success('Mapa seleccionado! Ve a tu perfil para terminar tu turno.', {
 				duration: 10000,
 				position: 'top-right',
 				style: { minWidth: '250px' },
 			});
 		});
+
 		return () => {
 			socket.off('mapConfirmed');
 		};
@@ -54,7 +55,7 @@ const MapsPage = () => {
 					/>
 				))}
 			</div>
-			<button className='maps-btn' onClick={handlerSelected} disabled={selectedCard === null || confirmed}>
+			<button className='maps-btn' onClick={handleSelect} disabled={selectedCard === null || confirmed}>
 				Seleccionar
 			</button>
 			<Menu />

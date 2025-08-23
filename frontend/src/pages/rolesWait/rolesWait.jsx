@@ -5,11 +5,10 @@ import './rolesWait.css';
 import { useNavigate } from 'react-router-dom';
 
 function RolesWaitPage() {
+	const navigate = useNavigate();
 	const [players, setPlayers] = useState([]);
 	const roomId = localStorage.getItem('roomId');
 	const playerId = localStorage.getItem('playerId');
-
-	const navigate = useNavigate();
 
 	useEffect(() => {
 		socket.emit('getRoomState', roomId, (room) => {

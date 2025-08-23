@@ -5,13 +5,12 @@ import CardMission from '../../components/cardMission/cardMission';
 import Menu from '../../components/menu/menu';
 import { useEffect, useState } from 'react';
 import useRequireInGame from '../../hooks/useRequireInGame';
-import { useNavigate } from 'react-router-dom';
 import socket from '../../socket/socket';
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
 	const [player, setPlayer] = useState(null);
-
 	const navigate = useNavigate();
 
 	useRequireInGame();
@@ -19,6 +18,7 @@ const ProfilePage = () => {
 	useEffect(() => {
 		const roomId = localStorage.getItem('roomId');
 		const playerId = localStorage.getItem('playerId');
+
 		socket.emit('getPlayerInfo', { roomId, playerId }, (response) => {
 			if (response.error) {
 				console.error(response.error);
@@ -29,11 +29,13 @@ const ProfilePage = () => {
 		});
 	}, []);
 
-	const handlerEndTurn = () => {
+	const handleEndTurn = () => {
 		const roomId = localStorage.getItem('roomId');
 		socket.emit('endTurn', roomId);
+
 		localStorage.setItem('isMyTurn', 'false');
-		toast('Turno finalizado', {
+
+		toast('Turno finalizado. Esperando tu turno...', {
 			duration: 10000,
 			position: 'top-right',
 			style: { minWidth: '250px' },
@@ -48,10 +50,11 @@ const ProfilePage = () => {
 
 	return (
 		<div className='page'>
+			<Toaster />
 			<SectionHeader title='PERFIL' description='' />
 			<CardProfile name={player.name} points={player.points} role={player.role} imageSrc={player.image} />
 			<CardMission className='extra-missions' />
-			<button className='profile-btn' onClick={handlerEndTurn}>
+			<button className='profile-btn' onClick={handleEndTurn}>
 				Terminar Turno
 			</button>
 			<Menu />
