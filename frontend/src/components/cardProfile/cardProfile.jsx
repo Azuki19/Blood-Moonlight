@@ -9,7 +9,7 @@ const CardProfile = ({ name, points, role, imageSrc }) => {
 				</div>
 				<div className='profile-input'>
 					<h2>{name}</h2>
-					<p>{points}</p>
+					<p>{points} pts</p>
 				</div>
 			</div>
 			<div className='role-card'>

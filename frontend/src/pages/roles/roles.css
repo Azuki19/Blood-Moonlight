@@ -73,3 +73,10 @@
 .start-button:hover {
 	transform: scale(1.05);
 }
+
+.start-button:disabled {
+	background-color: #555;
+	color: #ccc;
+	cursor: not-allowed;
+	transform: none;
+}

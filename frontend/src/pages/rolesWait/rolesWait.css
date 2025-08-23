@@ -1,0 +1,42 @@
+.page {
+	min-height: 100vh;
+	padding-top: 20px;
+	padding-bottom: 100px;
+	box-sizing: border-box;
+	background-color: #161616;
+	color: #fff;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: Arial, sans-serif;
+}
+
+.roles-wait-title {
+	color: #ffffff;
+	font-size: 28px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+.roles-room-id {
+	font-size: 18px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
+.roles-players-count {
+	margin-bottom: 10px;
+	font-weight: bold;
+	text-align: center;
+	width: 100%;
+	max-width: 500px;
+	padding: 0 15px;
+}
+
+.roles-players {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin-top: 15px;
+	width: 100%;
+}

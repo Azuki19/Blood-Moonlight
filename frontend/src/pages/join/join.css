@@ -55,9 +55,3 @@
 	cursor: pointer;
 	transition: background 0.2s ease;
 }
-
-.title {
-	color: #a5000c;
-	font-size: 32px;
-	margin-bottom: 20px;
-}

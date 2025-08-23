@@ -1,8 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import './home.css';
+import { useEffect } from 'react';
 
 const HomePage = () => {
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		localStorage.clear();
+	}, []);
 
 	const handlerCreate = () => {
 		navigate('/roles');

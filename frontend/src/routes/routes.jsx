@@ -8,6 +8,7 @@ import PullPage from '../pages/pull/pull';
 import InfectedPage from '../pages/infectedPage/infectedPage';
 import DetailCard from '../pages/detailCard/detailCard';
 import JoinPage from '../pages/join/join';
+import RolesWaitPage from '../pages/rolesWait/rolesWait';
 
 const AppRoutes = () => {
 	return (
@@ -23,6 +24,7 @@ const AppRoutes = () => {
 					<Route path='/infected' element={<InfectedPage />} />
 					<Route path='/detailCard/:idCard' element={<DetailCard />} />
 					<Route path='/join/:roomId' element={<JoinPage />} />
+					<Route path='/roles-wait' element={<RolesWaitPage />} />
 				</Routes>
 			</Router>
 		</>
