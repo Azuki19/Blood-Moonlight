@@ -9,62 +9,117 @@ const CardPage = () => {
 	const [cardNumber, setCardNumber] = useState('');
 	const [isMyTurn, setIsMyTurn] = useState(false);
 	const [isGameOver, setIsGameOver] = useState(false);
-
+	const [isWinner, setIsWinner] = useState(false);
+	const [players, setPlayers] = useState([]);
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const players = JSON.parse(localStorage.getItem('players'));
 		const playerId = localStorage.getItem('playerId');
-		const currentTurn = Number(localStorage.getItem('currentTurn'));
-		const myTurnFlag = localStorage.getItem('isMyTurn') !== 'false';
+		const roomId = localStorage.getItem('roomId');
 
-		if (players && playerId && currentTurn) {
-			const currentPlayer = players.find((p) => p.turnOrder === currentTurn);
-			setIsMyTurn(currentPlayer?.id === playerId && myTurnFlag);
-		}
+		const votingRounds = [4, 8, 12, 16];
+		const navigateToPullIfVotingRound = (round) => {
+			if (votingRounds.includes(round)) {
+				navigate('/pull');
+			}
+		};
 
-		const handleTurnUpdate = ({ currentTurn }) => {
+		const updateStatesFromPlayers = (playersList, currentTurn, round) => {
+			setPlayers(playersList);
+			localStorage.setItem('players', JSON.stringify(playersList));
+
+			const me = playersList.find((p) => p.id === playerId);
+			const alivePlayers = playersList.filter((p) => p.points > 0);
+
+			if (!me || me.points <= 0) {
+				setIsGameOver(true);
+				setIsMyTurn(false);
+				setIsWinner(false);
+				return;
+			}
+
+			if (alivePlayers.length === 1 && alivePlayers[0].id === playerId) {
+				setIsWinner(true);
+				setIsMyTurn(false);
+				setIsGameOver(false);
+				return;
+			}
+
+			setIsMyTurn(me.turnOrder === currentTurn && !me.endedTurn);
+			setIsGameOver(false);
+			setIsWinner(false);
+
+			navigateToPullIfVotingRound(round);
+		};
+
+		socket.emit('getRoomInfo', { roomId }, (room) => {
+			if (!room || room.error) return;
+			const playersList = room.players || [];
+			const currentTurn = room.currentTurn || 1;
+			const round = room.round || 1;
+
 			localStorage.setItem('currentTurn', currentTurn);
-			const players = JSON.parse(localStorage.getItem('players'));
-			const playerId = localStorage.getItem('playerId');
-			const currentPlayer = players.find((p) => p.turnOrder === currentTurn);
+			localStorage.setItem('ronda', round);
 
-			const myTurnFlag = currentPlayer?.id === playerId ? 'true' : 'false';
-			localStorage.setItem('isMyTurn', myTurnFlag);
+			updateStatesFromPlayers(playersList, currentTurn, round);
+		});
 
-			setIsMyTurn(currentPlayer?.id === playerId && myTurnFlag === 'true');
+		const handleTurnUpdate = ({ currentTurn, players: updatedPlayers }) => {
+			setPlayers(updatedPlayers);
+			localStorage.setItem('currentTurn', currentTurn);
+			const me = updatedPlayers.find((p) => p.id === playerId);
+			setIsMyTurn(me?.turnOrder === currentTurn && !me?.endedTurn);
 		};
 
 		const handleRoundUpdate = ({ round }) => {
 			localStorage.setItem('ronda', round);
+			const playersList = JSON.parse(localStorage.getItem('players')) || [];
+			const currentTurn = Number(localStorage.getItem('currentTurn') || 1);
+
+			const resetPlayers = playersList.map((p) => ({ ...p, endedTurn: false }));
+			updateStatesFromPlayers(resetPlayers, currentTurn, round);
 			console.log('➡ Nueva ronda:', round);
 		};
 
-		const handleRoomUpdate = (players) => {
-			const playerId = localStorage.getItem('playerId');
-			const me = players.find((p) => p.id === playerId);
+		const handleRoomUpdate = (updatedPlayers) => {
+			const currentTurn = Number(localStorage.getItem('currentTurn') || 1);
+			const round = Number(localStorage.getItem('ronda') || 1);
+			updateStatesFromPlayers(updatedPlayers, currentTurn, round);
+		};
 
-			if (me && me.points <= 0) {
-				setIsGameOver(true);
-				setIsMyTurn(false);
-			}
+		const handlePlayerGameOver = () => {
+			setIsGameOver(true);
+			setIsMyTurn(false);
+			setIsWinner(false);
+		};
+
+		const handlePlayerWinner = () => {
+			setIsWinner(true);
+			setIsMyTurn(false);
+			setIsGameOver(false);
 		};
 
 		socket.on('turnUpdated', handleTurnUpdate);
 		socket.on('roundUpdated', handleRoundUpdate);
 		socket.on('roomUpdate', handleRoomUpdate);
+		socket.on('playerGameOver', handlePlayerGameOver);
+		socket.on('playerWinner', handlePlayerWinner);
 
 		return () => {
 			socket.off('turnUpdated', handleTurnUpdate);
 			socket.off('roundUpdated', handleRoundUpdate);
 			socket.off('roomUpdate', handleRoomUpdate);
+			socket.off('playerGameOver', handlePlayerGameOver);
+			socket.off('playerWinner', handlePlayerWinner);
 		};
-	}, []);
+	}, [navigate]);
 
 	const handlerScanner = () => {
-		if (!isMyTurn || isGameOver) return;
+		if (!isMyTurn || isGameOver || isWinner) return;
 		navigate(`/detailCard/${cardNumber}`);
 	};
+
+	console.log('Jugadores:', players);
 
 	return (
 		<div className='page'>
@@ -74,14 +129,16 @@ const CardPage = () => {
 			/>
 
 			<div className='card-container-wrapper'>
-				{isGameOver ? (
+				{isWinner ? (
+					<div className='overlay-block game-over'>🎉 ¡HAS GANADO! 🎉</div>
+				) : isGameOver ? (
 					<div className='overlay-block game-over'>GAME OVER</div>
 				) : !isMyTurn ? (
 					<div className='overlay-block'>Esperando tu turno...</div>
 				) : null}
 
 				<div className='card-container'>
-					{isMyTurn && !isGameOver && (
+					{isMyTurn && !isGameOver && !isWinner && (
 						<>
 							<input
 								type='text'

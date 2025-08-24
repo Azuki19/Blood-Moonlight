@@ -2,7 +2,6 @@
 	display: grid;
 	gap: 15px;
 	padding: 15px;
-
 	grid-template-columns: repeat(2, 1fr);
 }
 
@@ -23,9 +22,14 @@
 	cursor: pointer;
 	margin: 1.5rem auto;
 	display: block;
-	transition: background-color 0.2s ease;
+	transition: background-color 0.2s ease, opacity 0.2s ease;
 }
 
 .pull-btn:hover {
 	background-color: #7a0009;
+}
+
+.pull-btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
 }
