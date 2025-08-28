@@ -12,14 +12,17 @@ function JoinPage() {
 		if (!name.trim()) return;
 
 		socket.emit('joinRoom', { roomId, name }, (player) => {
-			localStorage.setItem('player', JSON.stringify(player));
-			localStorage.setItem('playerId', player.id);
-			localStorage.setItem('roomId', roomId);
-			localStorage.setItem('playerName', player.name);
-			localStorage.setItem('ronda', '1');
-			localStorage.setItem('rol', 'vampiro normal');
-
-			navigate('/roles-wait');
+			const playerData = {
+				playerId: player.id,
+				roomId,
+				name: player.name,
+				rol: 'vampiro normal',
+				ronda: 1,
+				alive: true,
+				turnOrder: 1,
+			};
+			localStorage.setItem('playerData', JSON.stringify(playerData));
+			navigate('/sala-espera');
 		});
 	};
 
@@ -30,15 +33,13 @@ function JoinPage() {
 				<p className='join-room'>
 					Sala: <span>{roomId}</span>
 				</p>
-
 				<input
-					className='join-input'
 					type='text'
 					placeholder='Escribe tu nombre...'
 					value={name}
 					onChange={(e) => setName(e.target.value)}
+					className='join-input'
 				/>
-
 				<button className='join-button' onClick={handleJoin}>
 					Unirme
 				</button>

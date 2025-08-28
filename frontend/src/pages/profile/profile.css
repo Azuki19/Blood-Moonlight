@@ -1,10 +1,15 @@
 .page {
 	min-height: 100vh;
-	padding-top: 20px;
-	padding-bottom: 70px;
+	padding: 20px 15px 70px 15px;
 	box-sizing: border-box;
 	background-color: #161616;
 	color: #fff;
+}
+
+@media (min-width: 768px) {
+	.page {
+		padding: 20px 40px 70px 40px;
+	}
 }
 
 .extra-missions {
@@ -15,7 +20,7 @@
 	background-color: #a6000c;
 	color: white;
 	border: none;
-	border-radius: 25px;
+	border-radius: 17px;
 	padding: 0.7rem 1.5rem;
 	font-size: 1rem;
 	font-weight: bold;

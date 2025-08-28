@@ -6,25 +6,6 @@
 	margin: 2rem 0;
 }
 
-.overlay-block {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.8);
-	color: #ffcc00;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font-size: 2rem;
-	font-weight: bold;
-	text-align: center;
-	z-index: 1000;
-	padding: 1rem;
-	backdrop-filter: blur(3px);
-}
-
 .card-container {
 	display: flex;
 	flex-direction: column;
@@ -32,6 +13,7 @@
 	gap: 1rem;
 	justify-content: center;
 	z-index: 1;
+	text-align: center;
 }
 
 .card-number-input {
@@ -58,7 +40,7 @@
 	background-color: #fff;
 	color: #4e0000;
 	border: none;
-	border-radius: 12px;
+	border-radius: 17px;
 	padding: 0.6rem 2rem;
 	font-size: 1rem;
 	font-weight: bold;
@@ -84,33 +66,55 @@
 	font-size: 0.9rem;
 	color: #fff;
 	max-width: 300px;
+	line-height: 1.4;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 768px) {
 	.card-number-input {
-		width: 180px;
-		height: 36px;
-		font-size: 1.1rem;
+		width: 240px;
+		height: 38px;
+		font-size: 1.2rem;
 		padding: 0.4rem 2rem;
 	}
 
+	.card-button {
+		width: 160px;
+		font-size: 0.95rem;
+		padding: 0.5rem 1.5rem;
+	}
+
 	.card-image {
-		width: 80px;
-		height: 80px;
+		width: 90px;
+		height: 90px;
+	}
+
+	.card-instruction {
+		max-width: 240px;
+		font-size: 0.85rem;
+	}
+}
+
+@media (max-width: 480px) {
+	.card-number-input {
+		width: 180px;
+		height: 36px;
+		font-size: 1rem;
+		padding: 0.4rem 1.5rem;
 	}
 
 	.card-button {
 		width: 140px;
-		padding: 0.5rem 1.2rem;
 		font-size: 0.9rem;
+		padding: 0.4rem 1.2rem;
+	}
+
+	.card-image {
+		width: 75px;
+		height: 75px;
 	}
 
 	.card-instruction {
 		max-width: 200px;
 		font-size: 0.8rem;
-	}
-
-	.overlay-block {
-		font-size: 1.4rem;
 	}
 }

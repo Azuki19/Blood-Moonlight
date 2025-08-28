@@ -14,7 +14,7 @@ const Menu = () => {
 			</NavLink>
 			<NavLink className='menu-item' to='/profile'>
 				<img src='/icons/user.png' className='menu-icon' alt='icon-user' />
-				<span>Usuario</span>
+				<span>Perfil</span>
 			</NavLink>
 			<NavLink className='menu-item' to='/pull'>
 				<img src='/icons/emergency.png' className='menu-icon' alt='icon-emergency' />

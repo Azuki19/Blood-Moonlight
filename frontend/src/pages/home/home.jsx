@@ -10,7 +10,7 @@ const HomePage = () => {
 	}, []);
 
 	const handlerCreate = () => {
-		navigate('/roles');
+		navigate('/iniciar');
 	};
 
 	return (

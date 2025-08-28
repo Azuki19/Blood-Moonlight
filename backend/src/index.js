@@ -97,7 +97,9 @@ io.on('connection', (socket) => {
 		callback({ player });
 	});
 
-	socket.on('getRoomState', (roomId, callback) => {
+	socket.on('getRoomState', ({ roomId }, callback) => {
+		if (typeof callback !== 'function') callback = () => {};
+
 		if (rooms[roomId]) {
 			callback(rooms[roomId]);
 		} else {
@@ -117,7 +119,7 @@ io.on('connection', (socket) => {
 		io.to(roomId).emit('roomUpdate', rooms[roomId].players);
 	});
 
-	socket.on('updatePoints', ({ roomId, playerId, points }) => {
+	socket.on('updatePoints', ({ roomId, playerId, points }, callback) => {
 		const room = rooms[roomId];
 		if (!room) return;
 
@@ -133,20 +135,10 @@ io.on('connection', (socket) => {
 			io.to(player.id).emit('playerGameOver');
 
 			if (player.role === 'Vampiro infectado') {
-				console.log(`⚠ El vampiro infectado ${player.name} ha muerto en room ${roomId}`);
 				const alivePlayers = room.players.filter((p) => p.alive !== false);
 				if (alivePlayers.length > 0) {
 					const newInfected = alivePlayers[Math.floor(Math.random() * alivePlayers.length)];
 					newInfected.role = 'Vampiro infectado';
-					console.log(`El nuevo infectado en room ${roomId} es:`, {
-						id: newInfected.id,
-						name: newInfected.name,
-						points: newInfected.points,
-						role: newInfected.role,
-						ronda: newInfected.ronda,
-						image: newInfected.image,
-						turnOrder: newInfected.turnOrder,
-					});
 				}
 			}
 
@@ -160,6 +152,8 @@ io.on('connection', (socket) => {
 		io.to(roomId).emit('roomUpdate', room.players);
 
 		console.log(`Puntos actualizados: ${player.name} ahora tiene ${player.points}`);
+
+		if (callback) callback({ player });
 	});
 
 	socket.on('infectPlayer', ({ roomId, sourceId, targetId, points }) => {

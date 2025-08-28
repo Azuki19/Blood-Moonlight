@@ -13,23 +13,24 @@ function RolesPage() {
 	useEffect(() => {
 		socket.emit('createRoom', ({ roomId, player }) => {
 			setRoomId(roomId);
-			localStorage.setItem('player', JSON.stringify(player));
-			localStorage.setItem('playerId', player.id);
-			localStorage.setItem('roomId', roomId);
-			localStorage.setItem('playerName', player.name);
-			localStorage.setItem('ronda', '1');
-			localStorage.setItem('rol', 'vampiro normal');
+
+			const playerData = {
+				playerId: player.id,
+				roomId,
+				name: player.name,
+				rol: 'vampiro normal',
+				ronda: 1,
+				alive: true,
+				turnOrder: 1,
+			};
+			localStorage.setItem('playerData', JSON.stringify(playerData));
+			setPlayers([player]);
 		});
 
-		socket.on('roomUpdate', (updatedPlayers) => {
-			setPlayers(updatedPlayers);
-		});
+		socket.on('roomUpdate', (updatedPlayers) => setPlayers(updatedPlayers));
 
-		socket.on('gameStarted', ({ players, currentTurn }) => {
-			localStorage.setItem('inGame', 'true');
-			localStorage.setItem('players', JSON.stringify(players));
-			localStorage.setItem('currentTurn', currentTurn);
-			navigate('/cards', { replace: true });
+		socket.on('gameStarted', ({ players }) => {
+			navigate('/ronda', { replace: true, state: { roomId, players } });
 		});
 
 		return () => {
@@ -39,7 +40,7 @@ function RolesPage() {
 	}, [navigate]);
 
 	const handleStart = () => {
-		socket.emit('startGame', roomId);
+		if (roomId) socket.emit('startGame', roomId);
 	};
 
 	return (
@@ -48,21 +49,19 @@ function RolesPage() {
 
 			<div className='roles-qr'>
 				{roomId && (
-					<>
-						<QRCodeCanvas
-							value={`http://localhost:3000/join/${roomId}`}
-							size={200}
-							bgColor='#ffffff'
-							fgColor='#000000'
-						/>
-					</>
+					<QRCodeCanvas
+						value={`http://localhost:3000/unirse/${roomId}`}
+						size={200}
+						bgColor='#ffffff'
+						fgColor='#000000'
+					/>
 				)}
 			</div>
+
 			<p className='roles-room-id'>
 				ID de sala: <span>{roomId}</span>
 			</p>
-
-			<p className='roles-text'>Escanea el QR para unirte a la sala.</p>
+			<p className='roles-text'>Los jugadores deben escanear el código QR para unirse a la sala.</p>
 			<p className='roles-players-count'>JUGADORES: {players.length} / 8</p>
 
 			<div className='roles-players'>

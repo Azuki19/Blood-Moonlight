@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Aladin&display=swap');
+
 .page {
 	min-height: 100vh;
 	padding-top: 20px;
@@ -20,15 +22,16 @@
 
 .home-title {
 	color: #a5000c;
-	font-size: 32px;
+	font-size: 50px;
 	margin-bottom: 15px;
+	font-family: 'Aladin', cursive;
 }
 
 .home-description {
 	color: #fff;
 	font-size: 16px;
 	line-height: 1.6;
-	text-align: left;
+	text-align: justify;
 }
 
 .home-image-wrapper {
@@ -50,7 +53,7 @@
 
 .home-text-below {
 	max-width: 800px;
-	text-align: left;
+	text-align: justify;
 	font-size: 16px;
 	color: #fff;
 	margin: 10px auto 40px auto;
@@ -78,7 +81,7 @@
 	font-size: 16px;
 	padding: 10px 30px;
 	border: none;
-	border-radius: 10px;
+	border-radius: 17px;
 	cursor: pointer;
 	margin-bottom: 10px;
 	transition: transform 0.2s;

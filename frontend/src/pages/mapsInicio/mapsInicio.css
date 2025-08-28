@@ -1,0 +1,72 @@
+.cards-grid {
+	display: grid;
+	gap: 10px 15px;
+	padding: 0 20px 15px 20px;
+	grid-template-columns: repeat(2, 1fr);
+}
+
+@media (min-width: 768px) {
+	.cards-grid {
+		grid-template-columns: repeat(4, 1fr);
+		padding: 0 40px 20px 40px;
+		gap: 15px 20px;
+	}
+}
+
+.overlay-block {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.8);
+	color: #fff;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 2rem;
+	font-weight: bold;
+	text-align: center;
+	z-index: 1000;
+	padding: 1rem;
+	backdrop-filter: blur(3px);
+}
+
+.maps-btn {
+	background-color: #fff;
+	color: #710014;
+	font-size: 16px;
+	padding: 10px 30px;
+	border: none;
+	border-radius: 17px;
+	cursor: pointer;
+	margin: 15px auto;
+	display: block;
+	transition: transform 0.2s;
+}
+
+.maps-btn:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+.redirect-message {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	min-height: 60vh;
+	color: #fff;
+}
+
+.redirect-message h2 {
+	font-family: 'Cormorant Garamond', serif;
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
+}
+
+.redirect-message p {
+	font-size: 1rem;
+	color: #ddd;
+}

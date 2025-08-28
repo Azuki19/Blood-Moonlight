@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600&display=swap');
+
 .section-header {
 	display: flex;
 	flex-direction: column;
@@ -8,10 +10,11 @@
 }
 
 .section-title {
-	font-size: 24px;
-	font-weight: bold;
+	font-size: 40px;
+	font-weight: 300;
 	color: #fff;
 	margin: 0;
+	font-family: 'Cormorant Garamond', serif;
 }
 
 .section-description {

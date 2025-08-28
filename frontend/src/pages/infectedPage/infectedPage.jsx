@@ -37,7 +37,7 @@ const InfectedPage = () => {
 			}
 			setPlayers(updatedPlayers.filter((p) => p.id !== playerId));
 			if (sourceId === playerId) {
-				navigate(`/detailCard/${idCard}`);
+				navigate(`/detalle-carta/${idCard}`);
 			}
 		};
 
@@ -82,7 +82,7 @@ const InfectedPage = () => {
 				))}
 			</div>
 			<div className='infected-buttons'>
-				<button className='back-btn' onClick={() => navigate(`/detailCard/${idCard}`)}>
+				<button className='back-btn' onClick={() => navigate(`/detalle-carta/${idCard}`)}>
 					← Volver
 				</button>
 				<button className='pull-btn' onClick={handleInfect}>

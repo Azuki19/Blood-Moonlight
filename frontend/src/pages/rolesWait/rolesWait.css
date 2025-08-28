@@ -16,12 +16,14 @@
 	font-size: 28px;
 	margin-bottom: 20px;
 	text-align: center;
+	padding: 0 15px;
 }
 
 .roles-room-id {
 	font-size: 18px;
 	margin-bottom: 10px;
 	text-align: center;
+	padding: 0 15px;
 }
 
 .roles-players-count {
@@ -31,6 +33,7 @@
 	width: 100%;
 	max-width: 500px;
 	padding: 0 15px;
+	box-sizing: border-box;
 }
 
 .roles-players {
@@ -39,4 +42,7 @@
 	align-items: center;
 	margin-top: 15px;
 	width: 100%;
+	max-width: 800px;
+	padding: 0 15px;
+	box-sizing: border-box;
 }

@@ -11,18 +11,24 @@ const PullPage = () => {
 	const [players, setPlayers] = useState([]);
 	const [votedPlayer, setVotedPlayer] = useState(null);
 	const [hasVoted, setHasVoted] = useState(false);
+	const [round, setRound] = useState(null);
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const roomId = localStorage.getItem('roomId');
 
 		socket.emit('getRoomInfo', { roomId }, (room) => {
-			if (!room || !room.players) return;
-			const alivePlayers = room.players.filter((p) => (p.points ?? 0) > 0 && (p.alive ?? true));
-			setPlayers(alivePlayers);
+			if (!room) return;
+			setRound(room.round ?? 1);
+
+			if (room.players) {
+				const alivePlayers = room.players.filter((p) => (p.points ?? 0) > 0 && (p.alive ?? true));
+				setPlayers(alivePlayers);
+			}
 		});
 
-		const handleVotingRound = ({ players }) => {
+		const handleVotingRound = ({ players, round }) => {
+			setRound(round);
 			const alivePlayers = players.filter((p) => (p.points ?? 0) > 0 && (p.alive ?? true));
 			setPlayers(alivePlayers);
 			setHasVoted(false);
@@ -30,6 +36,7 @@ const PullPage = () => {
 		};
 
 		const handleVotingEnded = ({ nextRound }) => {
+			setRound(nextRound);
 			toast(`¡Votación terminada! Comienza la ronda ${nextRound}`, {
 				duration: 10000,
 				position: 'top-right',
@@ -37,7 +44,7 @@ const PullPage = () => {
 			});
 
 			setTimeout(() => {
-				navigate('/cards');
+				navigate('/cartas');
 			}, 5000);
 		};
 
@@ -67,28 +74,42 @@ const PullPage = () => {
 		setHasVoted(true);
 	};
 
-	console.log('Jugadores en votación:', players);
+	const votingRounds = [4, 8, 12, 16];
+	const isVotingRound = votingRounds.includes(round);
 
 	return (
 		<div className='page'>
 			<Toaster />
-			<SectionHeader title='VOTACIÓN' description='Confirma tus sospechas, ¡estaca al vampiro sombrío!' />
+			{!isVotingRound ? (
+				<div className='waiting-container'>
+					<h2 className='waiting-title'>VOTACIÓN BLOQUEADA</h2>
+					<p className='waiting-description'>
+						Espera a que sea la ronda de votación. Si tienes sospechas de alguien, habla con tus compañeros vampíricos y
+						diríjanse al centro del tablero.
+					</p>
+					<img src='/images/vampiro.png' alt='Vampiro' className='waiting-image' />
+				</div>
+			) : (
+				<>
+					<SectionHeader title='VOTACIÓN' description='Confirma tus sospechas, ¡estaca al vampiro sombrío!' />
 
-			<div className='vote-grid'>
-				{players.map((player) => (
-					<Card
-						key={player.id}
-						imageSrc={player.image}
-						text={player.name}
-						onClick={() => handleVote(player.id)}
-						selected={votedPlayer === player.id}
-					/>
-				))}
-			</div>
+					<div className='vote-grid'>
+						{players.map((player) => (
+							<Card
+								key={player.id}
+								imageSrc={player.image}
+								text={player.name}
+								onClick={() => handleVote(player.id)}
+								selected={votedPlayer === player.id}
+							/>
+						))}
+					</div>
 
-			<button className='pull-btn' onClick={submitVote} disabled={!votedPlayer || hasVoted}>
-				{hasVoted ? 'Esperando a los demás...' : 'Estacar'}
-			</button>
+					<button className='pull-btn' onClick={submitVote} disabled={!votedPlayer || hasVoted}>
+						{hasVoted ? 'Esperando a los demás...' : 'Estacar'}
+					</button>
+				</>
+			)}
 
 			<Menu />
 		</div>

@@ -19,7 +19,7 @@
 	font-size: 16px;
 	padding: 10px 30px;
 	border: none;
-	border-radius: 10px;
+	border-radius: 17px;
 	cursor: pointer;
 	margin: 15px auto;
 	display: block;
@@ -29,4 +29,25 @@
 .maps-btn:disabled {
 	opacity: 0.6;
 	cursor: not-allowed;
+}
+
+.redirect-message {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	min-height: 60vh;
+	color: #fff;
+}
+
+.redirect-message h2 {
+	font-family: 'Cormorant Garamond', serif;
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
+}
+
+.redirect-message p {
+	font-size: 1rem;
+	color: #ddd;
 }
