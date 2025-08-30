@@ -5,7 +5,6 @@ import CardMission from '../../components/cardMission/cardMission';
 import Menu from '../../components/menu/menu';
 import { useEffect, useState } from 'react';
 import socket from '../../socket/socket';
-import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
@@ -24,11 +23,12 @@ const ProfilePage = () => {
 		}
 
 		socket.emit('getPlayerInfo', { roomId, playerId }, (res) => {
-			if (res.error) {
-				toast.error(res.error);
-				return;
-			}
 			setPlayer(res.player);
+		});
+
+		socket.on('newRound', (round) => {
+			localStorage.setItem('ronda', round);
+			navigate('/ronda', { replace: true });
 		});
 
 		socket.emit('getRoomInfo', { roomId }, (res) => {
@@ -52,12 +52,6 @@ const ProfilePage = () => {
 		socket.emit('endTurn', roomId);
 		localStorage.setItem('isMyTurn', 'false');
 
-		toast('Turno finalizado. Esperando tu turno...', {
-			duration: 8000,
-			position: 'top-right',
-			style: { minWidth: '250px' },
-		});
-
 		navigate('/mapa-inicio');
 	};
 
@@ -65,7 +59,6 @@ const ProfilePage = () => {
 
 	return (
 		<div className='page'>
-			<Toaster />
 			<SectionHeader title='PERFIL' description='' />
 			<CardProfile
 				name={player.name}

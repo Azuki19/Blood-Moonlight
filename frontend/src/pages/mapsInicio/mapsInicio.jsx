@@ -13,8 +13,12 @@ const MapsInicioPage = () => {
 	const [players, setPlayers] = useState([]);
 	const [currentTurn, setCurrentTurn] = useState(1);
 	const [isMyTurn, setIsMyTurn] = useState(false);
+	const [alive, setAlive] = useState(true);
+	const [winner, setWinner] = useState(false);
+	const [winnerId, setWinnerId] = useState(null);
+	const [winnerName, setWinnerName] = useState('');
 
-	const playerData = JSON.parse(localStorage.getItem('playerData'));
+	const playerData = JSON.parse(localStorage.getItem('playerData') || '{}');
 
 	useEffect(() => {
 		if (!playerData?.playerId || !playerData?.roomId) return navigate('/', { replace: true });
@@ -26,55 +30,62 @@ const MapsInicioPage = () => {
 
 			const me = room.players.find((p) => p.id === playerData.playerId);
 			if (me) {
+				setAlive(me.alive);
 				setIsMyTurn(me.turnOrder === room.currentTurn && me.alive);
-				localStorage.setItem(
-					'playerData',
-					JSON.stringify({
-						...playerData,
-						turnOrder: me.turnOrder,
-						alive: me.alive,
-					})
-				);
 			}
 		});
 
 		const handleTurnUpdate = ({ currentTurn, players: updatedPlayers }) => {
 			setPlayers(updatedPlayers);
-			setCurrentTurn(currentTurn);
-
 			const me = updatedPlayers.find((p) => p.id === playerData.playerId);
 			if (me) {
-				setIsMyTurn(me.turnOrder === currentTurn && me.alive);
-				localStorage.setItem(
-					'playerData',
-					JSON.stringify({
-						...playerData,
-						turnOrder: me.turnOrder,
-						alive: me.alive,
-					})
-				);
+				setAlive(me.alive);
+				setIsMyTurn(me.turnOrder === currentTurn && me.alive && !winner);
 			}
 		};
 
-		const handleRoomUpdate = (updatedPlayers) => setPlayers(updatedPlayers);
+		const handleRoomUpdate = (updatedPlayers) => {
+			setPlayers(updatedPlayers);
+			const me = updatedPlayers.find((p) => p.id === playerData.playerId);
+			if (me) setAlive(me.alive);
+		};
+
+		const handleShowRound = ({ round }) => {
+			navigate('/ronda', { replace: true, state: { round } });
+		};
+
+		const handlePlayerWinner = (data = {}) => {
+			const { winnerId: id = null, winnerName: name = 'Alguien' } = data;
+			setWinner(true);
+			setWinnerId(id);
+			setWinnerName(name);
+			if (id === playerData.playerId) setIsMyTurn(false);
+		};
+
+		const handlePlayerGameOver = () => {
+			setAlive(false);
+			setIsMyTurn(false);
+		};
 
 		socket.on('turnUpdated', handleTurnUpdate);
 		socket.on('roomUpdate', handleRoomUpdate);
+		socket.on('showRoundPage', handleShowRound);
+		socket.on('playerWinner', handlePlayerWinner);
+		socket.on('playerGameOver', handlePlayerGameOver);
 
 		return () => {
 			socket.off('turnUpdated', handleTurnUpdate);
 			socket.off('roomUpdate', handleRoomUpdate);
+			socket.off('showRoundPage', handleShowRound);
+			socket.off('playerWinner', handlePlayerWinner);
+			socket.off('playerGameOver', handlePlayerGameOver);
 		};
-	}, [playerData, navigate]);
+	}, [playerData, navigate, winner]);
 
 	const handleSelect = () => {
 		if (!isMyTurn || selectedCard === null) return;
 
 		const map = mapsData[selectedCard];
-
-		const updatedPlayerData = { ...playerData, initialMap: map, round: 1 };
-		localStorage.setItem('playerData', JSON.stringify(updatedPlayerData));
-
 		socket.emit('mapSelected', {
 			roomId: playerData.roomId,
 			playerId: playerData.playerId,
@@ -91,7 +102,15 @@ const MapsInicioPage = () => {
 				description='Lanza los dados, mueve tu ficha y selecciona la locación en que caíste.'
 			/>
 
-			{!isMyTurn && <div className='overlay-block'>Esperando tu turno...</div>}
+			{!alive && !winner && <div className='overlay-block game-over'>💀 GAME OVER</div>}
+
+			{winner && (
+				<div className='overlay-block winner'>
+					🏆 {winnerId === playerData.playerId ? 'GANASTE' : `${winnerName} GANÓ`}
+				</div>
+			)}
+
+			{alive && !isMyTurn && !winner && <div className='overlay-block'>Esperando tu turno...</div>}
 
 			<div className='cards-grid'>
 				{mapsData.map((map, index) => (
@@ -100,13 +119,13 @@ const MapsInicioPage = () => {
 						imageSrc={map.image}
 						text={map.name}
 						selected={selectedCard === index}
-						onClick={() => isMyTurn && setSelectedCard(index)}
-						disabled={!isMyTurn}
+						onClick={() => isMyTurn && alive && !winner && setSelectedCard(index)}
+						disabled={!isMyTurn || !alive || winner}
 					/>
 				))}
 			</div>
 
-			{isMyTurn && (
+			{isMyTurn && alive && !winner && (
 				<button className='maps-btn' onClick={handleSelect} disabled={selectedCard === null}>
 					Seleccionar
 				</button>

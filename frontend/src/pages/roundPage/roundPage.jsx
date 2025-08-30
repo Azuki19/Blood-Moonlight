@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './roundPage.css';
 
 const RoundPage = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const [roundNumber, setRoundNumber] = useState(1);
+	const roundNumber = location.state?.round || 1;
 
 	useEffect(() => {
-		const playerData = JSON.parse(localStorage.getItem('playerData'));
-		if (playerData?.ronda) setRoundNumber(playerData.ronda);
+		const timer = setTimeout(() => {
+			navigate('/mapa-inicio', { replace: true });
+		}, 2500);
 
-		const timer = setTimeout(() => navigate('/mapa-inicio', { replace: true }), 3000);
 		return () => clearTimeout(timer);
 	}, [navigate]);
-
-	console.log(location);
 
 	return (
 		<div className='page round-page'>

@@ -1,17 +1,17 @@
-import './pull.css';
-import Menu from '../../components/menu/menu';
-import Card from '../../components/card/card';
-import SectionHeader from '../../components/sectionHeader/sectionHeader';
 import { useEffect, useState } from 'react';
-import socket from '../../socket/socket';
 import { useNavigate } from 'react-router-dom';
+import socket from '../../socket/socket';
+import Card from '../../components/card/card';
+import Menu from '../../components/menu/menu';
+import SectionHeader from '../../components/sectionHeader/sectionHeader';
 import toast, { Toaster } from 'react-hot-toast';
+import './pull.css';
 
 const PullPage = () => {
 	const [players, setPlayers] = useState([]);
 	const [votedPlayer, setVotedPlayer] = useState(null);
 	const [hasVoted, setHasVoted] = useState(false);
-	const [round, setRound] = useState(null);
+	const [round, setRound] = useState(1);
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -20,17 +20,12 @@ const PullPage = () => {
 		socket.emit('getRoomInfo', { roomId }, (room) => {
 			if (!room) return;
 			setRound(room.round ?? 1);
-
-			if (room.players) {
-				const alivePlayers = room.players.filter((p) => (p.points ?? 0) > 0 && (p.alive ?? true));
-				setPlayers(alivePlayers);
-			}
+			setPlayers(room.players.filter((p) => p.alive ?? true));
 		});
 
 		const handleVotingRound = ({ players, round }) => {
 			setRound(round);
-			const alivePlayers = players.filter((p) => (p.points ?? 0) > 0 && (p.alive ?? true));
-			setPlayers(alivePlayers);
+			setPlayers(players.filter((p) => p.alive ?? true));
 			setHasVoted(false);
 			setVotedPlayer(null);
 		};
@@ -42,10 +37,7 @@ const PullPage = () => {
 				position: 'top-right',
 				style: { minWidth: '250px' },
 			});
-
-			setTimeout(() => {
-				navigate('/cartas');
-			}, 5000);
+			setTimeout(() => navigate('/cartas'), 5000);
 		};
 
 		socket.on('votingRound', handleVotingRound);
@@ -57,9 +49,7 @@ const PullPage = () => {
 		};
 	}, [navigate]);
 
-	const handleVote = (targetId) => {
-		setVotedPlayer(targetId);
-	};
+	const handleVote = (targetId) => setVotedPlayer(targetId);
 
 	const submitVote = () => {
 		const playerId = localStorage.getItem('playerId');
@@ -70,7 +60,6 @@ const PullPage = () => {
 			voterId: playerId,
 			votedPlayerId: votedPlayer,
 		});
-
 		setHasVoted(true);
 	};
 
@@ -92,7 +81,6 @@ const PullPage = () => {
 			) : (
 				<>
 					<SectionHeader title='VOTACIÓN' description='Confirma tus sospechas, ¡estaca al vampiro sombrío!' />
-
 					<div className='vote-grid'>
 						{players.map((player) => (
 							<Card
@@ -104,13 +92,11 @@ const PullPage = () => {
 							/>
 						))}
 					</div>
-
 					<button className='pull-btn' onClick={submitVote} disabled={!votedPlayer || hasVoted}>
 						{hasVoted ? 'Esperando a los demás...' : 'Estacar'}
 					</button>
 				</>
 			)}
-
 			<Menu />
 		</div>
 	);

@@ -12,30 +12,38 @@ const InfectedPage = () => {
 	const [players, setPlayers] = useState([]);
 	const [selectedVictim, setSelectedVictim] = useState(null);
 
-	const playerId = localStorage.getItem('playerId');
-	const roomId = localStorage.getItem('roomId');
-	const ronda = Number(localStorage.getItem('ronda'));
+	const playerData = JSON.parse(localStorage.getItem('playerData') || '{}');
+	const playerId = playerData?.playerId;
+	const roomId = playerData?.roomId;
+	const ronda = playerData?.ronda || 1;
 
 	useEffect(() => {
-		const storedPlayers = JSON.parse(localStorage.getItem('players')) || [];
-		setPlayers(storedPlayers.filter((p) => p.id !== playerId));
+		if (!roomId || !playerId) return navigate('/');
+
+		socket.emit('getRoomState', { roomId }, (room) => {
+			if (!room) return;
+			const otherPlayers = room.players.filter((p) => p.id !== playerId && p.alive);
+			setPlayers(otherPlayers);
+			localStorage.setItem('players', JSON.stringify(room.players));
+		});
 
 		const handleRoomUpdate = (updatedPlayers) => {
+			const otherPlayers = updatedPlayers.filter((p) => p.id !== playerId && p.alive);
+			setPlayers(otherPlayers);
 			localStorage.setItem('players', JSON.stringify(updatedPlayers));
+
 			const myPlayer = updatedPlayers.find((p) => p.id === playerId);
-			if (myPlayer) {
-				localStorage.setItem('player', JSON.stringify(myPlayer));
-			}
-			setPlayers(updatedPlayers.filter((p) => p.id !== playerId));
+			if (myPlayer) localStorage.setItem('playerData', JSON.stringify({ ...playerData, ...myPlayer }));
 		};
 
 		const handlePlayerInfected = ({ sourceId, targetId, updatedPlayers }) => {
+			const otherPlayers = updatedPlayers.filter((p) => p.id !== playerId && p.alive);
+			setPlayers(otherPlayers);
 			localStorage.setItem('players', JSON.stringify(updatedPlayers));
+
 			const myPlayer = updatedPlayers.find((p) => p.id === playerId);
-			if (myPlayer) {
-				localStorage.setItem('player', JSON.stringify(myPlayer));
-			}
-			setPlayers(updatedPlayers.filter((p) => p.id !== playerId));
+			if (myPlayer) localStorage.setItem('playerData', JSON.stringify({ ...playerData, ...myPlayer }));
+
 			if (sourceId === playerId) {
 				navigate(`/detalle-carta/${idCard}`);
 			}
@@ -48,7 +56,7 @@ const InfectedPage = () => {
 			socket.off('roomUpdate', handleRoomUpdate);
 			socket.off('playerInfected', handlePlayerInfected);
 		};
-	}, [playerId, idCard, navigate]);
+	}, [playerId, roomId, idCard, navigate, playerData]);
 
 	const handleInfect = () => {
 		if (!selectedVictim) return alert('Selecciona un jugador primero');
@@ -56,6 +64,7 @@ const InfectedPage = () => {
 		if (ronda >= 8) points = 10;
 		if (ronda >= 12) points = 15;
 		if (ronda >= 16) points = 18;
+
 		socket.emit('infectPlayer', {
 			roomId,
 			sourceId: playerId,

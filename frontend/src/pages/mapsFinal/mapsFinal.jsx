@@ -4,9 +4,9 @@ import SectionHeader from '../../components/sectionHeader/sectionHeader';
 import Card from '../../components/card/card';
 import Menu from '../../components/menu/menu';
 import { mapsData } from '../../data/data';
-import './mapsFinal.css';
 import socket from '../../socket/socket';
 import toast, { Toaster } from 'react-hot-toast';
+import './mapsFinal.css';
 
 const MapsFinalPage = () => {
 	const navigate = useNavigate();
@@ -35,7 +35,6 @@ const MapsFinalPage = () => {
 		if (selectedCard === null) return;
 
 		const map = mapsData[selectedCard];
-
 		const updatedPlayerData = { ...playerData, finalMap: map };
 		localStorage.setItem('playerData', JSON.stringify(updatedPlayerData));
 
