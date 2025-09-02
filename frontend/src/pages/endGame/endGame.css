@@ -1,0 +1,51 @@
+@import url("https://fonts.googleapis.com/css2?family=Aladin&display=swap");
+
+.page {
+  min-height: 100vh;
+  padding-top: 20px;
+  padding-bottom: 100px;
+  box-sizing: border-box;
+  /* backgend-game: linear-gradient(135deg, #4e0000, #161616); */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.end-game-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding: 0 15px;
+}
+
+.end-game-title {
+  font-size: 60px;
+  margin-bottom: 20px;
+  font-family: "Aladin", cursive;
+}
+
+.end-game-image {
+  max-width: 300px;
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+}
+
+.end-game-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 0;
+}
+
+.text-style {
+  font-family: "Aladin", cursive;
+}

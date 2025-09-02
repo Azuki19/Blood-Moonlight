@@ -35,14 +35,7 @@ const createPlayer = ({ id, name = "Jugador", isHost = false }) => ({
 const markPlayerDead = (player, roomId) => {
   player.points = 0;
   player.alive = false;
-
-  const room = getRoom(roomId);
-
-  if (getAlivePlayers(room).length > 1) {
-    io.to(player.id).emit("playerGameOver");
-  }
-
-  checkWinner(room);
+  io.to(player.id).emit("playerGameOver");
   emitRoomUpdate(roomId);
 };
 
@@ -65,14 +58,17 @@ const checkWinner = (room) => {
   const alive = getAlivePlayers(room);
   if (alive.length === 1) {
     const winner = alive[0];
-    room.gameEnded = true;
+    io.to(room.roomId).emit("playerWinner", {
+      winnerId: winner.id,
+      winnerName: winner.name,
+    });
+    console.log(`🏆 ${winner.name} ha ganado la partida.`);
 
     io.to(room.roomId).emit("gameEnded", {
       winnerId: winner.id,
       winnerName: winner.name,
     });
 
-    console.log(`${winner.name} ha ganado la partida.`);
     return true;
   }
   return false;
@@ -189,21 +185,15 @@ io.on("connection", (socket) => {
       );
 
       if (notCompleted && hasAllMaps) {
-        if (player.alive) {
-          player.missionsCompleted.push(mission.text);
-          const oldPoints = player.points;
-          player.points += mission.points;
+        player.missionsCompleted.push(mission.text);
+        const oldPoints = player.points;
+        player.points += mission.points;
 
-          io.to(player.id).emit("missionCompleted", mission);
+        io.to(player.id).emit("missionCompleted", mission);
 
-          console.log(
-            `Misión completada: "${mission.text}" | Jugador: ${player.name} | +${mission.points} pts | Total: ${oldPoints} → ${player.points}`
-          );
-        } else {
-          console.log(
-            `${player.name} cumplió la misión "${mission.text}" pero estaba muerto, no recibe puntos`
-          );
-        }
+        console.log(
+          `Misión completada: "${mission.text}" | Jugador: ${player.name} | +${mission.points} pts | Total: ${oldPoints} → ${player.points}`
+        );
       }
     });
 

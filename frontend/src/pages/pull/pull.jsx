@@ -1,105 +1,150 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import socket from '../../socket/socket';
-import Card from '../../components/card/card';
-import Menu from '../../components/menu/menu';
-import SectionHeader from '../../components/sectionHeader/sectionHeader';
-import toast, { Toaster } from 'react-hot-toast';
-import './pull.css';
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import socket from "../../socket/socket";
+import Card from "../../components/card/card";
+import Menu from "../../components/menu/menu";
+import SectionHeader from "../../components/sectionHeader/sectionHeader";
+import toast, { Toaster } from "react-hot-toast";
+import "./pull.css";
 
 const PullPage = () => {
-	const [players, setPlayers] = useState([]);
-	const [votedPlayer, setVotedPlayer] = useState(null);
-	const [hasVoted, setHasVoted] = useState(false);
-	const [round, setRound] = useState(1);
-	const navigate = useNavigate();
+  const [players, setPlayers] = useState([]);
+  const [votedPlayer, setVotedPlayer] = useState(null);
+  const [hasVoted, setHasVoted] = useState(false);
+  const [round, setRound] = useState(1);
+  const [votingResult, setVotingResult] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-	useEffect(() => {
-		const roomId = localStorage.getItem('roomId');
+  const playerData = JSON.parse(localStorage.getItem("playerData") || "{}");
+  const playerId = playerData?.playerId;
+  const roomId = playerData?.roomId;
 
-		socket.emit('getRoomInfo', { roomId }, (room) => {
-			if (!room) return;
-			setRound(room.round ?? 1);
-			setPlayers(room.players.filter((p) => p.alive ?? true));
-		});
+  useEffect(() => {
+    if (location.state?.round) {
+      setRound(location.state.round);
+    }
+  }, [location.state]);
 
-		const handleVotingRound = ({ players, round }) => {
-			setRound(round);
-			setPlayers(players.filter((p) => p.alive ?? true));
-			setHasVoted(false);
-			setVotedPlayer(null);
-		};
+  useEffect(() => {
+    if (!roomId || !playerId) return;
 
-		const handleVotingEnded = ({ nextRound }) => {
-			setRound(nextRound);
-			toast(`¡Votación terminada! Comienza la ronda ${nextRound}`, {
-				duration: 10000,
-				position: 'top-right',
-				style: { minWidth: '250px' },
-			});
-			setTimeout(() => navigate('/cartas'), 5000);
-		};
+    socket.emit("getRoomState", { roomId }, (room) => {
+      if (!room) return;
 
-		socket.on('votingRound', handleVotingRound);
-		socket.on('votingEnded', handleVotingEnded);
+      const alivePlayers = room.players.filter(
+        (p) => p.alive && p.id !== playerId
+      );
+      setPlayers(alivePlayers);
 
-		return () => {
-			socket.off('votingRound', handleVotingRound);
-			socket.off('votingEnded', handleVotingEnded);
-		};
-	}, [navigate]);
+      setRound(room.round ?? round);
+    });
 
-	const handleVote = (targetId) => setVotedPlayer(targetId);
+    const handleRoomUpdate = (updatedPlayers) => {
+      const alivePlayers = updatedPlayers.filter(
+        (p) => p.alive && p.id !== playerId
+      );
+      setPlayers(alivePlayers);
+    };
 
-	const submitVote = () => {
-		const playerId = localStorage.getItem('playerId');
-		if (!votedPlayer) return;
+    const handleVotingRound = ({ players = [], round }) => {
+      setRound(round);
+      const alivePlayers = players.filter((p) => p.alive && p.id !== playerId);
+      setPlayers(alivePlayers);
+      setHasVoted(false);
+      setVotedPlayer(null);
+      setVotingResult(null);
+    };
 
-		socket.emit('submitVote', {
-			roomId: localStorage.getItem('roomId'),
-			voterId: playerId,
-			votedPlayerId: votedPlayer,
-		});
-		setHasVoted(true);
-	};
+    const handleVotingEnded = ({
+      eliminated,
+      wasInfected,
+      updatedPlayers = [],
+      nextRound,
+    }) => {
+      const alivePlayers = updatedPlayers.filter(
+        (p) => p.alive && p.id !== playerId
+      );
+      setPlayers(alivePlayers);
 
-	const votingRounds = [4, 8, 12, 16];
-	const isVotingRound = votingRounds.includes(round);
+      navigate("/resultado-votacion", {
+        state: { stakedPlayer: eliminated, wasInfected, nextRound },
+      });
+    };
 
-	return (
-		<div className='page'>
-			<Toaster />
-			{!isVotingRound ? (
-				<div className='waiting-container'>
-					<h2 className='waiting-title'>VOTACIÓN BLOQUEADA</h2>
-					<p className='waiting-description'>
-						Espera a que sea la ronda de votación. Si tienes sospechas de alguien, habla con tus compañeros vampíricos y
-						diríjanse al centro del tablero.
-					</p>
-					<img src='/images/vampiro.png' alt='Vampiro' className='waiting-image' />
-				</div>
-			) : (
-				<>
-					<SectionHeader title='VOTACIÓN' description='Confirma tus sospechas, ¡estaca al vampiro sombrío!' />
-					<div className='vote-grid'>
-						{players.map((player) => (
-							<Card
-								key={player.id}
-								imageSrc={player.image}
-								text={player.name}
-								onClick={() => handleVote(player.id)}
-								selected={votedPlayer === player.id}
-							/>
-						))}
-					</div>
-					<button className='pull-btn' onClick={submitVote} disabled={!votedPlayer || hasVoted}>
-						{hasVoted ? 'Esperando a los demás...' : 'Estacar'}
-					</button>
-				</>
-			)}
-			<Menu />
-		</div>
-	);
+    socket.on("roomUpdate", handleRoomUpdate);
+    socket.on("votingRound", handleVotingRound);
+    socket.on("votingEnded", handleVotingEnded);
+
+    return () => {
+      socket.off("roomUpdate", handleRoomUpdate);
+      socket.off("votingRound", handleVotingRound);
+      socket.off("votingEnded", handleVotingEnded);
+    };
+  }, [playerId, roomId, navigate, round]);
+
+  const handleVote = (targetId) => setVotedPlayer(targetId);
+
+  const submitVote = () => {
+    if (!votedPlayer) return;
+
+    socket.emit("submitVote", {
+      roomId,
+      voterId: playerId,
+      votedPlayerId: votedPlayer,
+    });
+    setHasVoted(true);
+  };
+
+  const votingRounds = [4, 8, 12, 16];
+  const isVotingRound = votingRounds.includes(round);
+
+  return (
+    <div className="page">
+      <Toaster />
+      {!isVotingRound ? (
+        <div className="waiting-container">
+          <h2 className="waiting-title">VOTACIÓN BLOQUEADA</h2>
+          <p className="waiting-description">
+            Espera a que sea la ronda de votación. Si tienes sospechas de
+            alguien, habla con tus compañeros vampíricos y diríjanse al centro
+            del tablero.
+          </p>
+          <img
+            src="/images/murcielago.png"
+            alt="Vampiro"
+            className="waiting-image"
+          />
+        </div>
+      ) : (
+        <>
+          <SectionHeader
+            title="VOTACIÓN"
+            description="Confirma tus sospechas, ¡estaca al vampiro sombrío!"
+          />
+          <div className="vote-grid">
+            {players.map((player) => (
+              <Card
+                key={player.id}
+                imageSrc={player.image || "/images/default-avatar.png"}
+                text={player.name}
+                onClick={() => handleVote(player.id)}
+                selected={votedPlayer === player.id}
+              />
+            ))}
+          </div>
+          <button
+            className="pull-btn"
+            onClick={submitVote}
+            disabled={!votedPlayer || hasVoted}
+          >
+            {hasVoted ? "Esperando a los demás..." : "Estacar"}
+          </button>
+        </>
+      )}
+      <Menu />
+    </div>
+  );
 };
 
 export default PullPage;

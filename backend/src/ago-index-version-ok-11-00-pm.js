@@ -1,5 +1,4 @@
 const express = require("express");
-const missions = require("./missions");
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
@@ -29,20 +28,12 @@ const createPlayer = ({ id, name = "Jugador", isHost = false }) => ({
   alive: true,
   infectionRounds: 0,
   lastSeenRound: 0,
-  missionsCompleted: [],
 });
 
 const markPlayerDead = (player, roomId) => {
   player.points = 0;
   player.alive = false;
-
-  const room = getRoom(roomId);
-
-  if (getAlivePlayers(room).length > 1) {
-    io.to(player.id).emit("playerGameOver");
-  }
-
-  checkWinner(room);
+  io.to(player.id).emit("playerGameOver");
   emitRoomUpdate(roomId);
 };
 
@@ -65,14 +56,11 @@ const checkWinner = (room) => {
   const alive = getAlivePlayers(room);
   if (alive.length === 1) {
     const winner = alive[0];
-    room.gameEnded = true;
-
-    io.to(room.roomId).emit("gameEnded", {
+    io.to(room.roomId).emit("playerWinner", {
       winnerId: winner.id,
       winnerName: winner.name,
     });
-
-    console.log(`${winner.name} ha ganado la partida.`);
+    console.log(`🏆 ${winner.name} ha ganado la partida.`);
     return true;
   }
   return false;
@@ -166,48 +154,15 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("mapSelected", ({ roomId, playerId, mapId }) => {
+  socket.on("mapSelected", ({ roomId, playerId, map }) => {
     const room = getRoom(roomId);
     if (!room) return;
 
     const player = getPlayer(room, playerId);
     if (!player) return;
 
-    player.selectedMap = mapId;
-
-    if (!player.visitedMaps) player.visitedMaps = [];
-    if (!player.visitedMaps.includes(mapId)) {
-      player.visitedMaps.push(mapId);
-    }
-
-    console.log(`Jugador ${player.name} seleccionó el mapa ${mapId}`);
-
-    missions.forEach((mission) => {
-      const notCompleted = !player.missionsCompleted.includes(mission.text);
-      const hasAllMaps = mission.mapIds.every((id) =>
-        player.visitedMaps.includes(id)
-      );
-
-      if (notCompleted && hasAllMaps) {
-        if (player.alive) {
-          player.missionsCompleted.push(mission.text);
-          const oldPoints = player.points;
-          player.points += mission.points;
-
-          io.to(player.id).emit("missionCompleted", mission);
-
-          console.log(
-            `Misión completada: "${mission.text}" | Jugador: ${player.name} | +${mission.points} pts | Total: ${oldPoints} → ${player.points}`
-          );
-        } else {
-          console.log(
-            `${player.name} cumplió la misión "${mission.text}" pero estaba muerto, no recibe puntos`
-          );
-        }
-      }
-    });
-
-    io.to(player.id).emit("mapConfirmed", mapId);
+    player.selectedMap = map;
+    io.to(player.id).emit("mapConfirmed");
     emitRoomUpdate(roomId);
   });
 
