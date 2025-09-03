@@ -38,7 +38,6 @@ const markPlayerDead = (player, roomId) => {
   player.points = 0;
   player.alive = false;
   player.role = "Vampiro común";
-  player.infectionRounds = 0;
 
   const room = getRoom(roomId);
 
@@ -146,7 +145,7 @@ io.on("connection", (socket) => {
 
     console.log(
       `El infectado inicial en room ${roomId} es:`,
-      players[infectedIndex].name
+      players[infectedIndex]
     );
 
     io.to(roomId).emit("gameStarted", { players, currentTurn: 1 });
@@ -270,15 +269,16 @@ io.on("connection", (socket) => {
     target.points -= points;
 
     if (target.points <= 0) {
+      // El objetivo murió: no puede volverse infectado
       markPlayerDead(target, roomId);
     } else {
+      // Infección exitosa
       source.role = "Vampiro común";
-      source.infectionRounds = 0;
       target.role = "vampiro infectado";
       target.infectionRounds = 0;
 
       console.log(
-        `${source.name} infectó a ${target.name} en room ${room.roomId}`
+        `🧛 ${source.name} infectó a ${target.name} en room ${room.roomId}`
       );
     }
 
@@ -302,17 +302,11 @@ io.on("connection", (socket) => {
     const room = getRoom(roomId);
     if (!room) return;
 
-    const alivePlayers = getAlivePlayers(room);
-    alivePlayers.forEach((p) => (p.voting = true));
-
+    room.players.forEach((p) => (p.voting = true));
     io.to(roomId).emit("votingRound", {
-      players: alivePlayers,
+      players: room.players,
       round: room.round,
     });
-
-    console.log(
-      `Comienza ronda de votación en room ${roomId} con ${alivePlayers.length} jugadores vivos`
-    );
   });
 
   socket.on("submitVote", ({ roomId, voterId, votedPlayerId }) => {
@@ -320,16 +314,9 @@ io.on("connection", (socket) => {
     if (!room) return;
 
     if (!room.votes) room.votes = [];
-
-    const voter = getPlayer(room, voterId);
-    if (!voter || !voter.alive) {
-      console.log(`El jugador ${voterId} intentó votar estando muerto`);
-      return;
-    }
-
     room.votes.push({ voterId, targetId: votedPlayerId });
 
-    const alivePlayers = getAlivePlayers(room);
+    const alivePlayers = room.players.filter((p) => p.alive);
     if (room.votes.length === alivePlayers.length) {
       const tally = {};
       room.votes.forEach(
@@ -339,13 +326,10 @@ io.on("connection", (socket) => {
       const mostVotedId = Object.keys(tally).reduce((a, b) =>
         tally[a] > tally[b] ? a : b
       );
-
       const stakedPlayer = room.players.find((p) => p.id === mostVotedId);
 
       stakedPlayer.alive = false;
       stakedPlayer.points = 0;
-      stakedPlayer.voting = false;
-      stakedPlayer.infectionRounds = 0;
 
       const wasInfected = stakedPlayer.role === "vampiro infectado";
 
@@ -356,27 +340,15 @@ io.on("connection", (socket) => {
       });
 
       room.votes = [];
+
       room.round = (room.round || 1) + 1;
 
       if (wasInfected) {
-        assignNewInfectedIfNeeded(room);
-      }
-
-      room.players.forEach((p) => {
-        p.endedTurn = false;
-      });
-
-      const alive = room.players
-        .filter((p) => p.alive)
-        .sort((a, b) => a.turnOrder - b.turnOrder);
-
-      if (alive.length > 0) {
-        room.currentTurn = alive[0].turnOrder;
-
-        io.to(roomId).emit("turnUpdated", {
-          currentTurn: room.currentTurn,
-          players: room.players,
-        });
+        const alive = room.players.filter((p) => p.alive);
+        if (alive.length > 0) {
+          const newInfected = alive[Math.floor(Math.random() * alive.length)];
+          newInfected.role = "vampiro infectado";
+        }
       }
 
       io.to(roomId).emit("votingEnded", {

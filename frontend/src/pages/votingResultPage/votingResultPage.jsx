@@ -7,14 +7,21 @@ const VotingResultPage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  const { stakedPlayer, wasInfected, nextRound } = state || {};
+  const { stakedPlayer, wasInfected, nextRound, gameEnded } = state || {};
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate("/ronda", { state: { round: nextRound } });
+      // 👇 Si el juego terminó, vamos directo a /fin
+      if (gameEnded) {
+        navigate("/fin", { replace: true });
+      } else {
+        // 👇 Si no, vamos a tablero con la banderita
+        navigate("/tablero", { state: { nextRound, continueGame: true } });
+      }
     }, 3000);
+
     return () => clearTimeout(timer);
-  }, [navigate, nextRound]);
+  }, [navigate, nextRound, gameEnded]);
 
   if (!stakedPlayer) return <p>Error: no data</p>;
 

@@ -18,7 +18,7 @@ function RolesPage() {
 				playerId: player.id,
 				roomId,
 				name: player.name,
-				rol: 'vampiro normal',
+				role: 'vampiro normal',
 				ronda: 1,
 				alive: true,
 				turnOrder: 1,

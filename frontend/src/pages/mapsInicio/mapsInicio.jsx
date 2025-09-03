@@ -65,7 +65,12 @@ const MapsInicioPage = () => {
     };
 
     const handleRoundStarted = ({ round }) => {
-      navigate("/ronda", { replace: true, state: { round } });
+      const me = players.find((p) => p.id === playerData.playerId);
+      if (me?.alive) {
+        navigate("/ronda", { replace: true, state: { round } });
+      } else {
+        console.log("Jugador muerto, no navega a /ronda");
+      }
     };
 
     const handleGameEnded = ({ winnerId, winnerName }) => {

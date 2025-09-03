@@ -27,11 +27,17 @@ const HomePage = () => {
 				</p>
 			</div>
 			<div className='home-image-wrapper'>
-				<img src='/images/image1.png' className='home-image' alt='image-home' />
+				<img
+					src='https://pbs.twimg.com/media/Gz8gm_wXEAABnwm?format=jpg&name=medium'
+					className='home-image'
+					alt='image-home'
+				/>
 			</div>
 			<p className='home-text-below'>
-				Lorem ipsum dolor sit amet consectetur adipiscing, elit tortor mauris nec varius in urna, rutrum senectus
-				malesuada habitant nibh. Sapien fusce integer ante dapibus ullamcorper torquent risus.
+				Uno de ustedes porta en secreto la Cepa Sombría, una infección que se propaga en las sombras. ¿Podrás descubrir
+				al vampiro infectado antes de que sea demasiado tarde? ¿O serás tú quien manipule, engañe y contagie sin
+				levantar sospechas? Miente, vota, estaca y sobrevive… solo el vampiro más astuto y con más poder de sangre podrá
+				coronarse.
 			</p>
 			<div className='home-footer'>
 				<button className='start-button' onClick={handlerCreate}>
