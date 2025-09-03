@@ -43,6 +43,9 @@ function RolesPage() {
 		if (roomId) socket.emit('startGame', roomId);
 	};
 
+	console.log(process.env.REACT_APP_FRONTED_URL);
+	console.log(process.env.REACT_APP_BACKEND_URL);
+
 	return (
 		<div className='page roles-page'>
 			<h1 className='roles-title'>Blood Moonlight</h1>
