@@ -118,9 +118,8 @@ const CardPage = () => {
 						</p>
 						<ol>
 							{stages.map((stage, index) => {
-								const currentStage = Math.min(ronda, stages.length);
-								const isActive = currentStage === index + 1;
-								console.log(stages);
+								const currentStage = Math.min(player?.infectionRounds || 0, stages.length - 1);
+								const isActive = currentStage === index;
 
 								return (
 									<li key={index} className={isActive ? 'active-stage' : ''}>

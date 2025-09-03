@@ -1,45 +1,45 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import socket from "../../socket/socket";
-import "./board.css";
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import socket from '../../socket/socket';
+import './board.css';
 
 const BoardPage = () => {
-  const navigate = useNavigate();
-  const [players, setPlayers] = useState([]);
+	const navigate = useNavigate();
+	const [players, setPlayers] = useState([]);
 
-  useEffect(() => {
-    const playerData = JSON.parse(localStorage.getItem("playerData") || "{}");
-    if (!playerData?.roomId) return navigate("/", { replace: true });
+	useEffect(() => {
+		const playerData = JSON.parse(localStorage.getItem('playerData') || '{}');
+		if (!playerData?.roomId) return navigate('/', { replace: true });
 
-    socket.emit("getRoomState", { roomId: playerData.roomId }, (room) => {
-      if (room?.players) {
-        const sorted = [...room.players].sort((a, b) => b.points - a.points);
-        setPlayers(sorted);
-      }
-    });
+		socket.emit('getRoomState', { roomId: playerData.roomId }, (room) => {
+			if (room?.players) {
+				const sorted = [...room.players].sort((a, b) => b.points - a.points);
+				setPlayers(sorted);
+			}
+		});
 
-    const timer = setTimeout(() => {
-      navigate("/fin", { replace: true });
-    }, 5000);
+		const timer = setTimeout(() => {
+			navigate('/fin', { replace: true });
+		}, 10000);
 
-    return () => clearTimeout(timer);
-  }, [navigate]);
+		return () => clearTimeout(timer);
+	}, [navigate]);
 
-  return (
-    <div className="page board-page">
-      <div className="board-content">
-        <h1 className="board-title">Tablero de puntos</h1>
+	return (
+		<div className='page board-page'>
+			<div className='board-content'>
+				<h1 className='board-title'>Tablero de puntos</h1>
 
-        <ul className="board-list">
-          {players.map((p, index) => (
-            <li key={p.id} className="board-item">
-              {index + 1}. {p.name} : {p.points} pts
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  );
+				<ul className='board-list'>
+					{players.map((p, index) => (
+						<li key={p.id} className='board-item'>
+							{index + 1}. {p.name} : {p.points} pts
+						</li>
+					))}
+				</ul>
+			</div>
+		</div>
+	);
 };
 
 export default BoardPage;
