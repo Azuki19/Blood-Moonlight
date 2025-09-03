@@ -162,3 +162,8 @@
 .modal-content li {
 	margin-bottom: 0.8rem;
 }
+
+.active-stage {
+	font-weight: bold;
+	color: #a10000;
+}
