@@ -1282,4 +1282,58 @@ export const cardData = [
 		isVampireCard: true,
 		image: 'https://pbs.twimg.com/media/Gz4WUeEXEAAVRuK?format=png&name=900x900',
 	},
+	{
+		id: 666,
+		title: 'Ojo de Murcielago',
+		description:
+			'Un ojo que nunca parpadea… porque está seco desde hace siglos. Aun así, revela más de lo que quisieras. Puedes ver el rol secreto de un jugador en tu misma locación.',
+		points: '-25 pts',
+		isVampireCard: false,
+		image: 'https://pbs.twimg.com/media/Gz8sbtbW4AAIK-N?format=jpg&name=900x900',
+	},
+	{
+		id: 999,
+		title: 'Ajo Sombrío',
+		description:
+			'Un ajo tan viejo y oscuro que ya ni sirve para cocinar. Pero vaya que espanta. Elige un jugador: queda paralizado y no podrá moverse en su próximo turno.',
+		points: '-30 pts',
+		isVampireCard: false,
+		image: 'https://pbs.twimg.com/media/Gz8svalWkAAFppl?format=jpg&name=900x900',
+	},
+	{
+		id: 777,
+		title: 'Pluma de Cuervo',
+		description:
+			'Una pluma caída de un cuervo que aún grazna en sueños. Al sostenerla, el viento susurra tu destino y te permite volar (o al menos simularlo). Puedes moverte a la localidad que quieras.',
+		points: '-30 pts',
+		isVampireCard: false,
+		image: 'https://pbs.twimg.com/media/Gz8ssr6W8AA_U0-?format=jpg&name=900x900',
+	},
+	{
+		id: 333,
+		title: 'Caliz Carmesí',
+		description:
+			'Antiguo, elegante y con dudosos estándares de higiene. Si lo levantas al cielo, la luna sonríe irónicamente y las posiciones cambian. Elige a un jugador y cámbiate de lugar con él.',
+		points: '-30 pts',
+		isVampireCard: false,
+		image: 'https://pbs.twimg.com/media/Gz8sp4vWsAA_IlR?format=jpg&name=900x900',
+	},
+	{
+		id: 222,
+		title: 'Colmillo de plata',
+		description:
+			'Dicen que perteneció a un vampiro supersticioso con pésima dentadura. Ahora es tu amuleto. Si alguien usa un objeto contra ti, este colmillo anula su acción maligna.',
+		points: '-25 pts',
+		isVampireCard: false,
+		image: 'https://pbs.twimg.com/media/Gz8skkQXkAEmfCv?format=jpg&name=900x900',
+	},
+	{
+		id: 888,
+		title: 'Daga de Hueso',
+		description:
+			'Forjada con tibias de algún pobre desdichado. La amenaza es silenciosa pero clara: obligas a un jugador de tu misma localidad a mudarse a otra, por tu seguridad.',
+		points: '-25 pts',
+		isVampireCard: false,
+		image: 'https://pbs.twimg.com/media/Gz8sgxaXoAAyiKW?format=jpg&name=900x900',
+	},
 ];
