@@ -343,6 +343,10 @@ io.on('connection', (socket) => {
 				p.endedTurn = false;
 			});
 
+			if (checkWinner(room)) {
+				return;
+			}
+
 			const alive = room.players.filter((p) => p.alive).sort((a, b) => a.turnOrder - b.turnOrder);
 
 			if (alive.length > 0) {
